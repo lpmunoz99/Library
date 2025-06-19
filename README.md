@@ -1,1 +1,1 @@
-# Library
+This is the first project of Javascript curriculum through The Odin Project, a Library, where the knowledge of objects and prototype is used.
