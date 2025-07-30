@@ -1,7 +1,7 @@
 const myLibrary = [];
 
-//Define the contructor for the books
-function Book(title, author, pages){
+//Refactored book class
+/* function Book(title, author, pages){
     if (!new.target) {
         throw Error("You must use the 'new' operator to call the constructor");
     }
@@ -10,13 +10,26 @@ function Book(title, author, pages){
     this.author = author;
     this.pages = pages;
     this.read = false;
+} */
+
+class Book{
+    constructor(title, author, pages){
+        if (!new.target) {
+            throw Error("You must use the 'new' operator to call the constructor");
+        }
+        this.id = crypto.randomUUID();
+        this.title = title;
+        this.author = author;
+        this.pages = pages;
+        this.read = false;
+    }
 }
 
 //Function to add information to the object book
 function addBooktoLibrary(title, author, pages){
     const addBook = new Book(title, author, pages);
     myLibrary.push(addBook);
-}
+} 
 
 //Function to change read status
 Book.prototype.readStatus = function (){
