@@ -44,6 +44,7 @@ Book.prototype.readStatus = function (){
 const container = document.querySelector('.container');
 const content = document.querySelector('.container-content');
 const contentText = document.querySelector('.content-text');
+const form = document.getElementById('main-form');
 const dialog = document.querySelector('dialog');
 const btn = document.querySelector('.btn-book');
 const btnSubmit = document.querySelector('.btn-submit');
@@ -67,61 +68,94 @@ btnCancel.addEventListener('click', () => {
     pagesInput.value = "";
 });
 
-//Function to submit the form information to display the books
-btnSubmit.addEventListener('click', () => {
+console.log(form);
 
-        //Clean display to add books
-        if(myLibrary.length === 0){
-            content.innerText = "";
-        }
+//Validate that all input are not empty and show custom message
+form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    // if the input field is invalid
+    if (titleInput.validity.valueMissing) {
+      // display an appropriate error message
+      titleInput.setCustomValidity("Please fill the title!");
+      titleInput.reportValidity();
+      // prevent form submission
+      return;
+    } else {
+        titleInput.setCustomValidity("");
+    }
 
-        //Display the books
-        addBooktoLibrary(titleInput.value, authorInput.value, pagesInput.value);
-        const newDiv = document.createElement('div');
-        newDiv.className = 'book';
+    if (authorInput.validity.valueMissing) {
+        // display an appropriate error message
+        authorInput.setCustomValidity("Please fill the author!!");
+        authorInput.reportValidity();
+        event.preventDefault();
+        return;
+      } else {
+        authorInput.setCustomValidity("");
+    }
+
+    if (pagesInput.validity.valueMissing) {
+        // display an appropriate error message
+        pagesInput.setCustomValidity("Please fill the number of pages!!");
+        pagesInput.reportValidity();
+        return;
+      } else {
+        pagesInput.setCustomValidity("");
+    }
+
+    //Clean display to add books
+    if(myLibrary.length === 0){
+        content.innerText = "";
+    }
+
+    //Display the books
+    addBooktoLibrary(titleInput.value, authorInput.value, pagesInput.value);
+    const newDiv = document.createElement('div');
+    newDiv.className = 'book';
+    for (let i = 0; i < myLibrary.length; i++) {
+        newDiv.dataset.id = myLibrary[i].id;
+        newDiv.innerText = "Title: " + myLibrary[i].title + "\n Author: " + myLibrary[i].author + "\n Pages: " + myLibrary[i].pages + "\n Have you read it?" + "\n";
+    }
+    content.appendChild(newDiv);
+    const btnStatus = document.createElement('button');
+    btnStatus.className = 'btn-status';
+    btnStatus.innerText = "Not read";
+
+    //Change button display based on read value
+    btnStatus.addEventListener('click', () => {
         for (let i = 0; i < myLibrary.length; i++) {
-            newDiv.dataset.id = myLibrary[i].id;
-            newDiv.innerText = "Title: " + myLibrary[i].title + "\n Author: " + myLibrary[i].author + "\n Pages: " + myLibrary[i].pages + "\n Have you read it?" + "\n";
+            myLibrary[i].readStatus();
+            if(myLibrary[i].read === true){
+                btnStatus.innerText = "Read";
+                btnStatus.style.backgroundColor = "green";
+            } else {
+                btnStatus.innerText = "Not read";
+                btnStatus.style.backgroundColor = "red";
+            }
         }
-        content.appendChild(newDiv);
-        const btnStatus = document.createElement('button');
-        btnStatus.className = 'btn-status';
-        btnStatus.innerText = "Not read";
+    });
+    newDiv.appendChild(btnStatus);
+    titleInput.value = "";
+    authorInput.value = "";
+    pagesInput.value = "";
 
-        //Change button display based on read value
-        btnStatus.addEventListener('click', () => {
-            for (let i = 0; i < myLibrary.length; i++) {
-                myLibrary[i].readStatus();
-                if(myLibrary[i].read === true){
-                    btnStatus.innerText = "Read";
-                    btnStatus.style.backgroundColor = "green";
-                } else {
-                    btnStatus.innerText = "Not read";
-                    btnStatus.style.backgroundColor = "red";
-                }
-            }
-        });
-        newDiv.appendChild(btnStatus);
-        titleInput.value = "";
-        authorInput.value = "";
-        pagesInput.value = "";
+    //delete button functionality
+    const deleteButton = document.createElement('button');
+    deleteButton.className = "delete-book";
 
-        //delete button functionality
-        const deleteButton = document.createElement('button');
-        deleteButton.className = "delete-book";
-
-        //search id and then index to properly delete book
-        deleteButton.addEventListener('click', () => {
-            let index = myLibrary.map (element => {
-                return element.id;
-            }).indexOf(newDiv.dataset.id);
-            myLibrary.splice(index, 1);
-            if(newDiv){
-                newDiv.remove();
-            }
-            if(myLibrary.length === 0){
-                content.appendChild(contentText);
-            }
-        });
-        newDiv.appendChild(deleteButton);
+    //search id and then index to properly delete book
+    deleteButton.addEventListener('click', () => {
+        let index = myLibrary.map (element => {
+            return element.id;
+        }).indexOf(newDiv.dataset.id);
+        myLibrary.splice(index, 1);
+        if(newDiv){
+            newDiv.remove();
+        }
+        if(myLibrary.length === 0){
+            content.appendChild(contentText);
+        }
+    });
+    newDiv.appendChild(deleteButton);
+    dialog.close();
 });

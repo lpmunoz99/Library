@@ -18,18 +18,18 @@
         </div>
         <dialog>
             <h2>New Book</h2>
-            <form action="" id="main-form" method="dialog">
+            <form action="" id="main-form" novalidate>
                     <div class="form-group">
                         <label for="title"> TITLE: </label>
-                        <input type="text" id="title" name="title" maxlength="25">
+                        <input type="text" id="title" name="title" maxlength="25" required>
                     </div>
                     <div class="form-group">
                         <label for="author"> AUTHOR: </label>
-                        <input type="text" id="author" name="author" maxlength="25">
+                        <input type="text" id="author" name="author" maxlength="25" required>
                     </div>
                     <div class="form-group">
                         <label for="pages"> PAGES: </label>
-                        <input type="number" id="pages" name="pages" maxlength="25">
+                        <input type="number" id="pages" name="pages" maxlength="25" required>
                     </div>
             </form>
             <button type="button" class="btn-cancel" form="main-form">Cancel</button>
